@@ -3,17 +3,13 @@ var Generator = require('generate-js'),
     $ = require('jquery'),
     Handlebars = require('handlebars');
 
-Handlebars.registerHelper('component', function(options) {
-  return new Handlebars.SafeString('<div class="mybold">XXX</div>');
-});
-
-
 var CustomElement = Generator.generate(function CustomElement(element, config, data) {
     var _ = this;
     var data = data || {};
 
     _.defineProperties({
         config: config,
+        handlebars: Handlebars.create(),
         $element: $(element),
         data: {
             get: function get() {
@@ -23,6 +19,23 @@ var CustomElement = Generator.generate(function CustomElement(element, config, d
                 data = newData;
                 _.render();
             }
+        }
+    });
+
+    _.handlebars.registerHelper('component', function(componentName, options) {
+        var component = _.config.subComponents[componentName];
+        var handlebarsData = this;
+
+        if (component) {
+            var id = componentName.toLowerCase() + '-' + Math.random().toString(36).substring(7);
+
+            setTimeout(function dumbTimeout() {
+                component.create('[data-id="' + id + '"]', handlebarsData);
+            }, 0);
+
+            return new _.handlebars.SafeString('<div data-id="' + id + '">' + handlebarsData + '</div>');
+        } else {
+            throw new Error('No component found (' + componentName + ').');
         }
     });
 
@@ -58,7 +71,7 @@ CustomElement.definePrototype({
     },
     parseTemplate: function parseTemplate() {
         var _ = this;
-        _.renderTemplate = Handlebars.compile(_.config.template);
+        _.renderTemplate = _.handlebars.compile(_.config.template);
     },
     update: function(newData) {
         var _ = this;
@@ -72,6 +85,11 @@ CustomElement.definePrototype({
     render: function render() {
         var _ = this;
         _.$element.html(_.renderTemplate(_.data));
+    },
+    createModel: function createModel(config) {
+        return CustomElement.generate(function Cup(el, data) {
+            this.supercreate(el, config, data);
+        });
     }
 });
 
