@@ -6,36 +6,33 @@
         <div id="ce"></div>
         <script type="text/javascript" src="test.js"></script>
         <script>
-            var Cat = CustomElement.createElement({
-                template: '<span>CAT ::: {{name}}</span>',
-                interactions: {
-                    superClick: {
-                        event: 'click',
-                        listener: function(e, el) {
-                            alert(this.data.name);
-                        }
-                    }
-                }
-            });
-
             var House = CustomElement.createElement({
                 template: '<label>{{name}}: {{text}}</label>\
-                    {{#each cats}}\
-                        {{component "cat"}}\
-                    {{/each}}',
-                subComponents: {
-                    cat: Cat
+                    <ul>\
+                        {{#each cats}}\
+                            <li><a>{{name}}</a></li>\
+                        {{else}}\
+                            <li>NO CATS!</li>\
+                        {{/each}}\
+                    </ul>',
+                interactions: {
+                    clickEvent: {
+                        event: 'click touch moveover',
+                        target: 'a',
+                        listener: function(e, el) {
+                            alert(el.text())
+                        }
+                    }
                 }
             });
 
             var house = House.create('#ce', {
                 name: 'NICE',
                 text: 'TRUE',
-                cats: [{
-                    name: 'Apple'
-                }, {
-                    name: 'Doug'
-                }]
+                cats: [
+                    { name: 'Fred' },
+                    { name: 'Wilma' }
+                ]
             });
         </script>
     </body>

@@ -32,7 +32,8 @@ var CustomElement = Generator.generate(function CustomElement(element, config, d
 
             setTimeout(function dumbTimeout() {
                 var obj = component.create('[data-id="' + id + '"]', handlebarsData);
-                _.components.push(obj);
+                obj.parent = _;
+                _.components[componentName].push(obj);
             }, 0);
 
             return new _.handlebars.SafeString('<div data-id="' + id + '">' + handlebarsData + '</div>');
@@ -89,6 +90,10 @@ CustomElement.definePrototype({
         }
 
         _.render();
+    },
+    dispose: function dispose() {
+        // removeChildren()
+        // removeItself()
     },
     render: function render() {
         var _ = this;
