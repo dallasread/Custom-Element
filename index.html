@@ -6,39 +6,37 @@
         <div id="ce"></div>
         <script type="text/javascript" src="test.js"></script>
         <script>
-            var Cup = CustomElement.generate(function Cup(el, data) {
-                var config = {
-                    template: '<span>CUP --- {{.}}</span>'
-                };
-                this.supercreate(el, config, data);
+            var Cat = CustomElement.createElement({
+                template: '<span>CAT ::: {{name}}</span>',
+                interactions: {
+                    superClick: {
+                        event: 'click',
+                        listener: function(e, el) {
+                            alert(this.data.name);
+                        }
+                    }
+                }
             });
 
-            var Label = CustomElement.generate(function Label(el, data) {
-                var config = {
-                    template: '<label>{{name}}: {{text}}</label>\
-                        {{#each cups}}\
-                            {{component "cup"}}\
-                        {{/each}}',
-                    interactions: {
-                        superClick: {
-                            event: 'click',
-                            listener: function(e, el) {
-                                this.update({ text: el.text() })
-                            }
-                        }
-                    },
-                    subComponents: {
-                        cup: Cup
-                    }
-                };
-                this.supercreate(el, config, data);
+            var House = CustomElement.createElement({
+                template: '<label>{{name}}: {{text}}</label>\
+                    {{#each cats}}\
+                        {{component "cat"}}\
+                    {{/each}}',
+                subComponents: {
+                    cat: Cat
+                }
             });
-            var l1 = Label.create('#ce', {});
-            l1.data = {
+
+            var house = House.create('#ce', {
                 name: 'NICE',
                 text: 'TRUE',
-                cups: [1, 2, 3, 4]
-            };
+                cats: [{
+                    name: 'Apple'
+                }, {
+                    name: 'Doug'
+                }]
+            });
         </script>
     </body>
 </html>

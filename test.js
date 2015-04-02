@@ -10,6 +10,7 @@ var CustomElement = Generator.generate(function CustomElement(element, config, d
     _.defineProperties({
         config: config,
         handlebars: Handlebars.create(),
+        components: [],
         $element: $(element),
         data: {
             get: function get() {
@@ -30,7 +31,8 @@ var CustomElement = Generator.generate(function CustomElement(element, config, d
             var id = componentName.toLowerCase() + '-' + Math.random().toString(36).substring(7);
 
             setTimeout(function dumbTimeout() {
-                component.create('[data-id="' + id + '"]', handlebarsData);
+                var obj = component.create('[data-id="' + id + '"]', handlebarsData);
+                _.components.push(obj);
             }, 0);
 
             return new _.handlebars.SafeString('<div data-id="' + id + '">' + handlebarsData + '</div>');
@@ -41,6 +43,12 @@ var CustomElement = Generator.generate(function CustomElement(element, config, d
 
     _.init();
 });
+
+CustomElement.createElement = function createElement(config) {
+    return this.generate(function Element(el, data) {
+        this.supercreate(el, config, data);
+    });
+};
 
 CustomElement.definePrototype({
     init: function init() {
@@ -85,11 +93,6 @@ CustomElement.definePrototype({
     render: function render() {
         var _ = this;
         _.$element.html(_.renderTemplate(_.data));
-    },
-    createModel: function createModel(config) {
-        return CustomElement.generate(function Cup(el, data) {
-            this.supercreate(el, config, data);
-        });
     }
 });
 
