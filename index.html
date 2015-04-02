@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Custom Element</title>
+    </head>
+    <body>
+        <div id="ce"></div>
+        <script type="text/javascript" src="test.js"></script>
+        <script>
+            var Cup = CustomElement.generate(function Label(el, data) {
+                var config = {
+                    template: '<span>CUP --- {{.}}</span>'
+                };
+                this.supercreate(el, config, data);
+            });
+
+            var Label = CustomElement.generate(function Label(el, data) {
+                var config = {
+                    template: '<label>{{name}}: {{text}}</label>\
+                        {{#each cups}}\
+                            {{component "cup"}}\
+                        {{/each}}',
+                    interactions: {
+                        superClick: {
+                            event: 'click',
+                            listener: function(e, el) {
+                                this.update({ text: el.text() })
+                            }
+                        }
+                    },
+                    subComponents: {
+                        cup: Cup
+                    }
+                };
+                this.supercreate(el, config, data);
+            });
+            var l1 = Label.create('#ce', {});
+            l1.data = {
+                name: 'NICE',
+                text: 'TRUE',
+                cups: [1, 2, 3, 4]
+            };
+        </script>
+    </body>
+</html>
