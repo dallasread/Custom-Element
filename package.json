@@ -1,5 +1,5 @@
 {
-  "name": "Custom-Element",
+  "name": "generate-js-custom-element",
   "version": "0.0.0",
   "description": "A model for building custom UI components using Generat-JS",
   "main": "index.js",
