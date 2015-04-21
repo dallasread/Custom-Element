@@ -1,6 +1,6 @@
 {
   "name": "generate-js-custom-element",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A model for building custom UI components using Generat-JS",
   "main": "index.js",
   "scripts": {
@@ -17,8 +17,7 @@
   },
   "homepage": "https://github.com/Mike96Angelo/Custom-Element",
   "dependencies": {
-    "generate-js": "^2.0.3",
-    "handlebars": "^3.0.1",
-    "jquery": "^2.1.3"
+    "generate-js-events": "^2.0.0",
+    "handlebars": "^3.0.1"
   }
 }
