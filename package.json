@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Mike96Angelo/Custom-Element",
   "dependencies": {
-    "generate-js-events": "^2.0.0",
+    "generate-js-bindings": "^1.0.5",
     "handlebars": "^3.0.1"
   }
 }
