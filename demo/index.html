@@ -4,62 +4,47 @@
     </head>
     <body>
         <div id="ce"></div>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="custom-element.js"></script>
         <script>
-            var House = CustomElement.createElement({
+            var config = {
                 templates: {
-                    index: '<menu class="file-tree-nav nav"></menu>\
-                        <section class="content scrollable">\
-                            {{> tree}}\
-                        </section>',
-                },
-                partials: {
-                    tree: '<div class="folder">\
-                        <ul>{{#each tree}}{{> item}}{{/each}}</ul>\
-                    </div>',
-                    item: '<li class="{{#if tree}}folder{{else}}file{{/if}}">\
-                        <div class="activeBg"></div>\
-                        <div class="fs-item">\
-                            {{#if isdir}}\
-                                <i class="fa fa-folder-open"></i>\
-                                <i class="fa fa-folder"></i>\
+                    index: '<label>{{name}}: {{text}}</label>\
+                        <ul>\
+                            {{#each cats}}\
+                                <li><a>{{name}}</a></li>\
                             {{else}}\
-                                <i class="fa fa-file"></i>\
-                            {{/if}}\
-                            <span class="title">{{?caps @key}}</span>\
-                        </div>\
-                        {{#if tree}}\
-                            <ul>{{#each tree}}{{> item}}{{/each}}</ul>\
-                        {{/if}}\
-                    </li>'
-                },
-                helpers: {
-                    caps: function (text) {
-                        return text && text.toString().toUpperCase();
-                    }
+                                <li>NO CATS!</li>\
+                            {{/each}}\
+                        </ul>'
                 },
                 interactions: {
                     clickEvent: {
                         event: 'click touch moveover',
                         target: 'a',
                         listener: function(e, el) {
-                            alert(el.text());
+                            alert(el.text())
                         }
                     }
                 }
+            };
+
+            var House = CustomElement.createElement(config, function (options) {
+                var _ = this;
+                _.supercreate(options);
             });
 
-            var house = window.house = House.create('#ce');
-
-            house.update({
-                tree: {
-                    'Welcome.md': {
-                        name: 'Welcome.md',
-                        path: '/Welcome.md'
-                    }
-                }
+            var house = House.create({
+                $element: $('#ce')
             });
+
+            house.set('name', 'My Name');
+            house.set('text', 'This is text.');
+            house.set('cats', [
+                { name: 'Fred' },
+                { name: 'Wilma' }
+            ]);
+            house.update();
         </script>
     </body>
 </html>
