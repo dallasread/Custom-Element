@@ -1,0 +1,50 @@
+<html>
+    <head>
+        <title>Custom Element</title>
+    </head>
+    <body>
+        <div id="ce"></div>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script type="text/javascript" src="custom-element.js"></script>
+        <script>
+            var config = {
+                templates: {
+                    index: '<label>{{name}}: {{text}}</label>\
+                        <ul>\
+                            {{#each cats}}\
+                                <li><a>{{name}}</a></li>\
+                            {{else}}\
+                                <li>NO CATS!</li>\
+                            {{/each}}\
+                        </ul>'
+                },
+                interactions: {
+                    clickEvent: {
+                        event: 'click touch moveover',
+                        target: 'a',
+                        listener: function(e, el) {
+                            alert(el.text())
+                        }
+                    }
+                }
+            };
+
+            var House = CustomElement.createElement(config, function (options) {
+                var _ = this;
+                _.supercreate(options);
+            });
+
+            var house = House.create({
+                $element: $('#ce')
+            });
+
+            house.set('name', 'My Name');
+            house.set('text', 'This is text.');
+            house.set('cats', [
+                { name: 'Fred' },
+                { name: 'Wilma' }
+            ]);
+            house.update();
+        </script>
+    </body>
+</html>

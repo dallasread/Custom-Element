@@ -48,10 +48,12 @@ Then, you can:
 
 ```
 el.set('name', 'Things');
+el.update();
 ```
 
 Or, for variables that have been declared through `generate-js-bindings` `generateGettersSetters` method:
 
 ```
 el.specialVar = 'Hi, world!';
+el.update();
 ```
