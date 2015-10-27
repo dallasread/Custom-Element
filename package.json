@@ -17,8 +17,8 @@
   },
   "homepage": "https://github.com/Mike96Angelo/Custom-Element",
   "dependencies": {
-    "bars": "^0.1.3",
-    "generate-js-bindings": "^1.0.5"
+    "bars": "^0.1.11",
+    "generate-js-bindings": "^1.0.10"
   },
   "devDependencies": {
     "browserify": "^11.0.1",
