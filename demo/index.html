@@ -1,50 +1,80 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>Custom Element</title>
+        <script type="text/javascript" src="custom-element.js"></script>
     </head>
     <body>
-        <div id="ce"></div>
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script type="text/javascript" src="custom-element.js"></script>
+        <div id="ce">Loading...</div>
         <script>
-            var config = {
-                templates: {
-                    index: '<label>{{name}}: {{text}}</label>\
+            var HOUSE_CONFIG = {
+                    template: '<label>House: {{name}}</label>\
                         <ul>\
                             {{#each cats}}\
                                 <li><a>{{name}}</a></li>\
                             {{else}}\
                                 <li>NO CATS!</li>\
                             {{/each}}\
-                        </ul>'
-                },
-                interactions: {
-                    clickEvent: {
-                        event: 'click touch moveover',
-                        target: 'a',
-                        listener: function(e, el) {
-                            alert(el.text())
+                        </ul>',
+                    blocks: {
+                        unless: function unless(data, consequent, alternate, context) {
+                            if (data) {
+                                alternate();
+                            } else {
+                                consequent();
+                            }
+                        }
+                    },
+                    interactions: {
+                        clickEvent: {
+                            event: 'click touch moveover',
+                            target: 'a',
+                            listener: function(e, el) {
+                                alert(el.text())
+                            }
                         }
                     }
-                }
-            };
+                },
+                LARGE_HOUSE_CONFIG = {
+                    template: 'Hotel: {{name}}\
+                        {{#unless cats/length <= 1}}\
+                            {{cats/length}} cats :)\
+                        {{else}}\
+                            {{cats/length}} cats :(\
+                        {{/unless}}',
+                    blocks: {
+                        unless: function unless(data, consequent, alternate, context) {
+                            if (data) {
+                                alternate();
+                            } else {
+                                consequent();
+                            }
+                        }
+                    }
+                };
 
-            var House = CustomElement.createElement(config, function (options) {
+            var House = CustomElement.createElement(HOUSE_CONFIG, function House(options) {
                 var _ = this;
-                _.supercreate(options);
+                CustomElement.call(_, options);
             });
 
-            var house = House.create({
-                $element: $('#ce')
+            var Hotel = House.createElement(LARGE_HOUSE_CONFIG, function Hotel(options) {
+                var _ = this;
+                House.call(_, options);
             });
 
-            house.set('name', 'My Name');
-            house.set('text', 'This is text.');
+            var house = new Hotel({
+                $element: document.getElementById('ce'),
+                data: {
+                    name: 'My House'
+                }
+            });
+
+            house.set('name', 'Purr...');
             house.set('cats', [
                 { name: 'Fred' },
                 { name: 'Wilma' }
             ]);
-            house.update();
         </script>
     </body>
 </html>
