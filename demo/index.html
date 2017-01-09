@@ -2,13 +2,14 @@
 <html>
     <head>
         <title>Custom Element</title>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script type="text/javascript" src="custom-element.js"></script>
     </head>
     <body>
         <div id="ce">Loading...</div>
         <script>
             var HOUSE_CONFIG = {
-                    template: '<label>House: {{name}}</label>\
+                    template: '<a>House</a>: <span>{{name}}</span>\
                         <ul>\
                             {{#each cats}}\
                                 <li><a>{{name}}</a></li>\
@@ -26,17 +27,19 @@
                         }
                     },
                     interactions: {
-                        clickEvent: {
-                            event: 'click touch moveover',
+                        houseClick: {
+                            event: 'click',
                             target: 'a',
-                            listener: function(e, el) {
-                                alert(el.text())
+                            action: function action(e, el) {
+                                alert(el.text());
+                                return false;
                             }
                         }
                     }
                 },
-                LARGE_HOUSE_CONFIG = {
-                    template: 'Hotel: {{name}}\
+
+                HOTEL_CONFIG = {
+                    template: '<a>Hotel</a>: <span>{{name}}</span>\
                         {{#unless cats/length <= 1}}\
                             {{cats/length}} cats :)\
                         {{else}}\
@@ -50,6 +53,24 @@
                                 consequent();
                             }
                         }
+                    },
+                    interactions: {
+                        houseClick: {
+                            event: 'click',
+                            target: 'a',
+                            action: function action(e, el) {
+                                alert('Overridden by Hotel');
+                                return false;
+                            }
+                        },
+                        clickEvent: {
+                            event: 'click',
+                            target: 'span',
+                            action: function action(e, el) {
+                                alert('Hotel span click');
+                                return false;
+                            }
+                        }
                     }
                 };
 
@@ -58,7 +79,7 @@
                 CustomElement.call(_, options);
             });
 
-            var Hotel = House.createElement(LARGE_HOUSE_CONFIG, function Hotel(options) {
+            var Hotel = House.createElement(HOTEL_CONFIG, function Hotel(options) {
                 var _ = this;
                 House.call(_, options);
             });
@@ -66,15 +87,13 @@
             var house = new Hotel({
                 $element: document.getElementById('ce'),
                 data: {
-                    name: 'My House'
+                    name: 'My Place...',
+                    cats: [
+                        { name: 'Fred' },
+                        { name: 'Wilma' }
+                    ]
                 }
             });
-
-            house.set('name', 'Purr...');
-            house.set('cats', [
-                { name: 'Fred' },
-                { name: 'Wilma' }
-            ]);
         </script>
     </body>
 </html>
