@@ -1,59 +1,73 @@
 # Custom-Element
-A model for building custom UI components using Generat-JS
-
-## Dependencies
-- generate-js
-- jQuery
-- Bars
-- CustomElement
+A model for building custom UI components using Generate-JS
 
 ## Example
 
 ```
-var CustomElement = require('../utils/custom-element'),
-    Bindable = require('generate-js-bindings');
+var CustomElement = require('generate-js-custom-element');
 
-var config = {
-    templates: {
-        index: 'No template set for {{@key}}.'
+var CONFIG = {
+    template: 'My name is\
+        {{#unless person/name}}\
+            unknown\
+        {{else}}\
+            <a class="person">{{person/name}}</a>\
+        {{/unless}}.',
+    blocks: { // see bars package for usage
+        unless: function unless(data, consequent, alternate, context) {
+            data ? alternate() : consequent();
+        }
+    },
+    interactions: { // see interactions package for usage
+        personClick: {
+            event: 'click',
+            target: 'a.person',
+            action: function action(e, el) {
+                var _ = this;
+                _.set('nameClicked', true);
+                _.doStuff();
+                alert(el.innerHTML);
+                return false;
+            }
+        }
+    },
+    data: { // Default data
+        person: {
+            name: 'John Doe'
+        }
     }
 };
 
-var MyElement = CustomElement.createElement(config, function MyElement(options) {
+var MyElement = CustomElement.createElement(CONFIG, function MyElement(options) {
     var _ = this;
-
-    _.supercreate(options);
+    CustomElement.call(_, options);
 });
 
-Bindable.generateGettersSetters(MyElement, ['specialVar']); // Optionally add Getter/Setters
-
 MyElement.definePrototype({
-    myMethod: function myMethod(done) {
-        typeof done === 'function' && done();
+    doStuff: function doStuff(done) {
+        done();
     }
 });
 
 module.exports = MyElement;
 ```
 
-Now, you can create an element like so:
+Now, you can create a new `MyElement` in any HTML element like so:
 
 ```
 var el = MyElement.create({
-    $element: $('#myelement')
+    $element: document.getElementById('my-element')
 });
 ```
 
 Then, you can:
 
 ```
-el.set('name', 'Things');
-el.update();
+el.set('person.name', 'John Doe');
+el.get('person.name.length');
 ```
 
-Or, for variables that have been declared through `generate-js-bindings` `generateGettersSetters` method:
-
-```
-el.specialVar = 'Hi, world!';
-el.update();
-```
+## Dependencies
+- generate-js
+- bars
+- interactions (jQuery not required, but more performant)
