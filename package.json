@@ -1,7 +1,7 @@
 {
   "name": "generate-js-custom-element",
   "version": "1.0.0",
-  "description": "A model for building custom UI components using Generat-JS",
+  "description": "A model for building custom UI components using Generate-JS",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,13 +17,15 @@
   },
   "homepage": "https://github.com/Mike96Angelo/Custom-Element",
   "dependencies": {
-    "bars": "^0.1.11",
-    "generate-js-bindings": "^1.0.10"
+    "bars": "^0.5.3",
+    "interactions": "0.0.1"
   },
   "devDependencies": {
     "browserify": "^11.0.1",
     "gulp": "^3.9.0",
+    "json-loader": "^0.5.4",
     "vinyl-buffer": "^1.0.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "webpack": "^1.14.0"
   }
 }
