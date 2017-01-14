@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Mike96Angelo/Custom-Element",
   "dependencies": {
-    "bars": "^0.5.3",
+    "bars": "^0.4.6",
     "interactions": "0.0.1"
   },
   "devDependencies": {

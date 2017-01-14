@@ -485,7 +485,11 @@
 	    }, {
 	        thisArg: options.thisArg,
 	        emitter: options.emitter,
-	        $: options.$ || (window.$ && window.$.noConflict()) || (window.jQuery.noConflict())
+	        $: options.$ || (typeof window !== 'undefined' && (
+	            window.$ && window.$.noConflict()
+	        ) || (
+	            window.jQuery && window.jQuery.noConflict()
+	        ))
 	    });
 
 	    _.parseInteractions(options.interactions);
