@@ -7,7 +7,7 @@ var MyWidget = CustomElement.createElement({
         <hr>\
         {{>yup name=name}}',
     partials: {
-        yup: '<strong>Name: {{name}}</strong>'
+        yup: '<strong>Name: {{@punctuate(name)}}</strong>'
     },
     transforms: {
         punctuate: function punctuate(a) {
