@@ -1,12 +1,13 @@
-var webpack = require('webpack');
-
 var js = {
-    entry: ['.'],
+    entry: ['./index.js'],
     output: { filename: './demo/custom-element.js' },
     module: {
         loaders: [
-            // We need this because Bars requires its package.json
-            { test: /\.json$/, loader: 'json' }
+            { test: /\.json$/, loader: 'json' },
+            { test: /\.html$/, loader: 'html?minimize=false' },
+            { test: /\.png$/,  loader: 'url-loader?mimetype=image/png' },
+            { test: /\.jpeg$/, loader: 'url-loader?mimetype=image/jpeg' },
+            { test: /\.gif$/,  loader: 'url-loader?mimetype=image/gif' },
         ]
     }
 };

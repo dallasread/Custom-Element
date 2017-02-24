@@ -1,99 +1,39 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>Custom Element</title>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script type="text/javascript" src="custom-element.js"></script>
     </head>
     <body>
-        <div id="ce">Loading...</div>
-        <script>
-            var HOUSE_CONFIG = {
-                    template: '<a>House</a>: <span>{{name}}</span>\
-                        <ul>\
-                            {{#each cats}}\
-                                <li><a>{{name}}</a></li>\
-                            {{else}}\
-                                <li>NO CATS!</li>\
-                            {{/each}}\
-                        </ul>',
-                    blocks: {
-                        unless: function unless(data, consequent, alternate, context) {
-                            if (data) {
-                                alternate();
-                            } else {
-                                consequent();
-                            }
-                        }
-                    },
-                    interactions: {
-                        houseClick: {
-                            event: 'click',
-                            target: 'a',
-                            action: function action(e, el) {
-                                alert(el.text());
-                                return false;
-                            }
-                        }
-                    }
+        <script type="text/javascript" src="./custom-element.js"></script>
+        <script type="text/javascript">
+            var Widget = CustomElement.createElement({
+                template: 'My name is <input value="{{name}}">.\
+                    <hr>\
+                    {{>yup name=name}}',
+                partials: {
+                    yup: '<strong>Name: {{name}}</strong>'
                 },
-
-                HOTEL_CONFIG = {
-                    template: '<a>Hotel</a>: <span>{{name}}</span>\
-                        {{#unless cats/length <= 1}}\
-                            {{cats/length}} cats :)\
-                        {{else}}\
-                            {{cats/length}} cats :(\
-                        {{/unless}}',
-                    blocks: {
-                        unless: function unless(data, consequent, alternate, context) {
-                            if (data) {
-                                alternate();
-                            } else {
-                                consequent();
-                            }
-                        }
-                    },
-                    interactions: {
-                        houseClick: {
-                            event: 'click',
-                            target: 'a',
-                            action: function action(e, el) {
-                                alert('Overridden by Hotel');
-                                return false;
-                            }
-                        },
-                        clickEvent: {
-                            event: 'click',
-                            target: 'span',
-                            action: function action(e, el) {
-                                alert('Hotel span click');
-                                return false;
-                            }
-                        }
+                transforms: {
+                    punctuate: function punctuate(a) {
+                        return a + '.';
                     }
-                };
-
-            var House = CustomElement.createElement(HOUSE_CONFIG, function House(options) {
-                var _ = this;
-                CustomElement.call(_, options);
-            });
-
-            var Hotel = House.createElement(HOTEL_CONFIG, function Hotel(options) {
-                var _ = this;
-                House.call(_, options);
-            });
-
-            var house = new Hotel({
-                $element: document.getElementById('ce'),
-                data: {
-                    name: 'My Place...',
-                    cats: [
-                        { name: 'Fred' },
-                        { name: 'Wilma' }
-                    ]
                 }
+            }, function Widget(options) {
+                var _ = this;
+
+                CustomElement.call(_, options || {});
+
+                _.element.onkeyup = function(e) {
+                    _.set('name', e.target.value);
+                };
             });
+
+            var widget = new Widget();
+
+            widget.set('name', 'Dallas');
+
+            document.body.appendChild(widget.element);
         </script>
     </body>
 </html>

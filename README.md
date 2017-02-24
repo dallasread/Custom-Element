@@ -1,73 +1,50 @@
 # Custom-Element
-A model for building custom UI components using Generate-JS
-
-## Example
+A model for building custom UI components
 
 ```
-var CustomElement = require('generate-js-custom-element');
-
-var CONFIG = {
-    template: 'My name is\
-        {{#unless person/name}}\
-            unknown\
-        {{else}}\
-            <a class="person">{{person/name}}</a>\
-        {{/unless}}.',
-    blocks: { // see bars package for usage
-        unless: function unless(data, consequent, alternate, context) {
-            data ? alternate() : consequent();
-        }
+var MyWidget = CustomElement.createElement({
+    template: 'My name is <input value="{{name}}">.\
+        <hr>\
+        {{>yup name=name}}',
+    partials: {
+        yup: '<strong>Name: {{name}}</strong>'
     },
-    interactions: { // see interactions package for usage
-        personClick: {
-            event: 'click',
-            target: 'a.person',
-            action: function action(e, el) {
-                var _ = this;
-                _.set('nameClicked', true);
-                _.doStuff();
-                alert(el.innerHTML);
-                return false;
-            }
-        }
-    },
-    data: { // Default data
-        person: {
-            name: 'John Doe'
+    transforms: {
+        punctuate: function punctuate(a) {
+            return a + '.';
         }
     }
-};
-
-var MyElement = CustomElement.createElement(CONFIG, function MyElement(options) {
+}, function MyWidget(options) {
     var _ = this;
-    CustomElement.call(_, options);
-});
 
-MyElement.definePrototype({
-    doStuff: function doStuff(done) {
-        done();
+    CustomElement.call(_, options || {});
+
+    _.element.onkeyup = function keyUp(e) {
+        _.set('name', e.target.value);
+    };
+});
+```
+
+Now, you can create a new `MyWidget` in any HTML element like so:
+
+```
+var widget = new MyWidget();
+```
+
+Or, better yet:
+
+```
+var widget = new MyWidget({
+    data: {
+        name: 'Dallas'
     }
 });
 
-module.exports = MyElement;
+document.body.appendChild(widget.element);
 ```
 
-Now, you can create a new `MyElement` in any HTML element like so:
+Then, update the data:
 
 ```
-var el = MyElement.create({
-    $element: document.getElementById('my-element')
-});
+widget.set('name', 'Alex');
 ```
-
-Then, you can:
-
-```
-el.set('person.name', 'John Doe');
-el.get('person.name.length');
-```
-
-## Dependencies
-- generate-js
-- bars
-- interactions (jQuery not required, but more performant)
