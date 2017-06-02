@@ -5,7 +5,7 @@ var Store = Generator.generateFrom(events.EventEmitter, function Store(data) {
     var _ = this;
 
     _.defineProperties({
-        _data: data || {}
+        _data: typeof data === 'object' ? data : {}
     });
 });
 
@@ -65,7 +65,7 @@ Store.definePrototype({
         _.emit('update', key);
     },
 
-    get: function get(key) {
+    get: function get(key, defaultValue) {
         var _ = this,
             splat = key.split(/\/|\./),
             lastKey = splat.pop(),
@@ -73,10 +73,10 @@ Store.definePrototype({
 
         for (var i = 0; i < splat.length; i++) {
             obj = obj[splat[i]];
-            if (!obj) return;
+            if (typeof obj !== 'object') return defaultValue;
         }
 
-        return obj[lastKey];
+        return obj[lastKey] || defaultValue;
     },
 
     push: function push(key, value) {
