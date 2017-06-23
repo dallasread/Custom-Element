@@ -4,11 +4,10 @@ var Bars = require('bars'),
 
 module.exports = function createElement(config, constructor) {
     var _ = this,
-        bars = new Bars(),
         el = _.generate(constructor);
 
     el.createElement = createElement;
-    el.registerBars = registerBars(bars);
+    el.registerBars = registerBars(el.prototype.bars || new Bars());
     el.registerBars(config);
     el.attach = attach;
 
