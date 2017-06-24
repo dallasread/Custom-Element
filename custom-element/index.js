@@ -9,7 +9,7 @@ var CustomElement = Store.generate(function CustomElement(options) {
 
     var dom = _.bars.build(
         _.bars.preCompile(
-            findTemplate(_, options.template),
+            findTemplate(_, options.template || _.template),
             'index',
             null,
             {
