@@ -5,12 +5,17 @@ var Store = Generator.generateFrom(events.EventEmitter, function Store(data) {
     var _ = this;
 
     _.defineProperties({
+        writable: true
+    },
+    {
         _data: typeof data === 'object' ? data : {}
     });
 });
 
 Store.definePrototype({
     set: function set(key, value) {
+        if (typeof key === 'undefined') return;
+
         this._data = typeof this._data === 'object' ? this._data : {};
 
         var _ = this,
@@ -34,6 +39,8 @@ Store.definePrototype({
     },
 
     unset: function unset(key) {
+        if (typeof key === 'undefined') return;
+
         this._data = typeof this._data === 'object' ? this._data : {};
 
         var _ = this,
@@ -66,6 +73,8 @@ Store.definePrototype({
     },
 
     get: function get(key, defaultValue) {
+        if (typeof key === 'undefined') return defaultValue;
+
         var _ = this,
             splat = key.split(/\/|\./),
             lastKey = splat.pop(),

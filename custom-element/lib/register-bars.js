@@ -27,6 +27,14 @@ module.exports = function registerBarsWrapper(bars) {
             }
         }
 
+        if (typeof config.components === 'object') {
+            for (key in config.components) {
+                if (config.components.hasOwnProperty(key)) {
+                    bars.registerComponent(key, config.components[key]);
+                }
+            }
+        }
+
         _.definePrototype({
             writable: true
         }, {

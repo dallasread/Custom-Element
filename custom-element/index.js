@@ -32,8 +32,13 @@ var CustomElement = Store.generate(function CustomElement(options) {
 CustomElement.createElement = createElement;
 
 CustomElement.definePrototype({
-    update: function update() {
+    init: function init() {
+        this.update();
+        return this.element;
+    },
+    update: function update(data) {
         var _ = this;
+        if (typeof data === 'object') _._data = data;
         _.dom.update(_._data);
     }
 });
