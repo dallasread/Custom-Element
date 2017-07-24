@@ -25,7 +25,7 @@
                 },
                 components: {
                     boom: CustomElement.createElement({
-                        template: 'Boom - {{name}}!'
+                        template: 'Boom - {{name}} - {{>yup name=name}}!'
                     }, function Boom(options) {
                         var _ = this;
 

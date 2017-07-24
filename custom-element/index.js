@@ -2,8 +2,16 @@ var Store = require('./lib/store'),
     createElement = require('./lib/create-element'),
     findTemplate = require('./lib/find-template');
 
+function merge(a, b) {
+    for (var key in b) {
+        a[key] = b[key];
+    }
+}
+
 var CustomElement = Store.generate(function CustomElement(options) {
     var _ = this;
+
+    if (typeof options !== 'object') options = {};
 
     Store.call(_, typeof options === 'object' ? options.data : {});
 
@@ -38,7 +46,11 @@ CustomElement.definePrototype({
     },
     update: function update(data) {
         var _ = this;
-        if (typeof data === 'object') _._data = data;
+
+        if (typeof data === 'object') {
+            merge(_._data, data)
+        }
+
         _.dom.update(_._data);
     }
 });
