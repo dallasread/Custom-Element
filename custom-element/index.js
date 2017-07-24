@@ -37,6 +37,7 @@ var CustomElement = Store.generate(function CustomElement(options) {
     _.update();
 });
 
+CustomElement.Bars = require('bars');
 CustomElement.createElement = createElement;
 
 CustomElement.definePrototype({
