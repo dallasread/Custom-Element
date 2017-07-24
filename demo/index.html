@@ -7,7 +7,8 @@
     <body>
         <script type="text/javascript" src="./custom-element.js"></script>
         <script type="text/javascript">
-            var bars = new CustomElement.Bars(),
+            var CustomElement = window.CustomElement,
+                bars = new CustomElement.Bars(),
                 Widget = CustomElement.createElement({
                     template: 'My name is <input value="{{name}}">.\
                         <hr>\
