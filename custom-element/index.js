@@ -42,8 +42,11 @@ CustomElement.createElement = createElement;
 
 CustomElement.definePrototype({
     init: function init() {
-        this.update();
-        return this.element;
+        var _ = this;
+
+        _.update();
+
+        return _.element;
     },
     update: function update(data) {
         var _ = this;
@@ -53,6 +56,8 @@ CustomElement.definePrototype({
         }
 
         _.dom.update(_._data);
+
+        return _.element;
     }
 });
 
