@@ -1,5 +1,7 @@
 var Generator = require('generate-js'),
-    events = require('events');
+    events = require('events'),
+    IS_INTEGER = /^\d+$/,
+    SPLITTER = /\/|\./;
 
 var Store = Generator.generateFrom(events.EventEmitter, function Store(data) {
     var _ = this;
@@ -13,17 +15,21 @@ var Store = Generator.generateFrom(events.EventEmitter, function Store(data) {
 });
 
 Store.definePrototype({
-    set: function set(key, value) {
+    set: function set(key, value, startObj) {
         if (typeof key === 'undefined') return;
 
         this._data = typeof this._data === 'object' ? this._data : {};
 
         var _ = this,
-            splat = key.split(/\/|\./),
+            splat = key.split(SPLITTER),
             lastKey = splat.pop(),
-            obj = _._data;
+            obj = startObj || _._data;
 
         for (var i = 0; i < splat.length; i++) {
+            if (IS_INTEGER.test(splat[i]) && typeof obj[parseInt(splat[i])] !== 'undefined') {
+                splat[i] = parseInt(splat[i]);
+            }
+
             if (typeof obj[splat[i]] !== 'object') {
                 obj[splat[i]] = {};
             }
@@ -31,22 +37,26 @@ Store.definePrototype({
             obj = obj[splat[i]];
         }
 
-        obj[lastKey] = value;
+        if (IS_INTEGER.test(lastKey) && typeof obj[parseInt(lastKey)] !== 'undefined') {
+            obj[parseInt(lastKey)] = value;
+        } else {
+            obj[lastKey] = value;
+        }
 
-        _.emit('update', key, value);
+        _.emit('update', key, value, startObj);
 
         return value;
     },
 
-    unset: function unset(key) {
+    unset: function unset(key, startObj) {
         if (typeof key === 'undefined') return;
 
         this._data = typeof this._data === 'object' ? this._data : {};
 
         var _ = this,
-            splat = key.split(/\/|\./),
+            splat = key.split(SPLITTER),
             lastKey = splat.pop(),
-            obj = _._data;
+            obj = startObj || _._data;
 
         for (var i = 0; i < splat.length; i++) {
             if (typeof obj[splat[i]] !== 'object') {
@@ -69,16 +79,16 @@ Store.definePrototype({
             obj = obj[splat[i]];
         }
 
-        _.emit('update', key);
+        _.emit('update', key, void(0), startObj);
     },
 
-    get: function get(key, defaultValue) {
+    get: function get(key, startObj, defaultValue) {
         if (typeof key === 'undefined') return defaultValue;
 
         var _ = this,
-            splat = key.split(/\/|\./),
+            splat = key.split(SPLITTER),
             lastKey = splat.pop(),
-            obj = _._data;
+            obj = startObj || _._data;
 
         for (var i = 0; i < splat.length; i++) {
             obj = obj[splat[i]];
@@ -88,15 +98,15 @@ Store.definePrototype({
         return obj[lastKey] || defaultValue;
     },
 
-    push: function push(key, value) {
+    push: function push(key, value, startObj) {
         var _ = this,
-            arr = _.get(key);
+            arr = _.get(key, startObj);
 
         if (arr instanceof Array) {
             arr.push(value);
-            _.set(key, arr);
+            _.set(key, arr, startObj);
         } else {
-            _.set(key, [value]);
+            _.set(key, [value], startObj);
         }
     }
 });
