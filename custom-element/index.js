@@ -23,7 +23,7 @@ var CustomElement = Store.generate(function CustomElement(options) {
             {
                 minify: true
             }
-        ), _._data);
+        ), _.data);
 
     _.defineProperties({
         element: dom.rootNode,
@@ -52,10 +52,10 @@ CustomElement.definePrototype({
         var _ = this;
 
         if (typeof data === 'object') {
-            merge(_._data, data);
+            merge(_.data, data);
         }
 
-        _.dom.update(_._data);
+        _.dom.update(_.data);
 
         return _.element;
     }
