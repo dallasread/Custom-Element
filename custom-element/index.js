@@ -52,7 +52,7 @@ CustomElement.definePrototype({
         var _ = this;
 
         if (typeof data === 'object') {
-            merge(_._data, data)
+            merge(_._data, data);
         }
 
         _.dom.update(_._data);
