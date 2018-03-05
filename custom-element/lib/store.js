@@ -10,7 +10,7 @@ var Store = Generator.generateFrom(events.EventEmitter, function Store(data) {
         writable: true
     },
     {
-        _data: typeof data === 'object' ? data : {}
+        data: typeof data === 'object' ? data : {}
     });
 });
 
@@ -18,12 +18,12 @@ Store.definePrototype({
     set: function set(key, value, startObj) {
         if (typeof key === 'undefined') return;
 
-        this._data = typeof this._data === 'object' ? this._data : {};
+        this.data = typeof this.data === 'object' ? this.data : {};
 
         var _ = this,
             splat = key.split(SPLITTER),
             lastKey = splat.pop(),
-            obj = startObj || _._data;
+            obj = startObj || _.data;
 
         for (var i = 0; i < splat.length; i++) {
             if (IS_INTEGER.test(splat[i]) && typeof obj[parseInt(splat[i])] !== 'undefined') {
@@ -51,12 +51,12 @@ Store.definePrototype({
     unset: function unset(key, startObj) {
         if (typeof key === 'undefined') return;
 
-        this._data = typeof this._data === 'object' ? this._data : {};
+        this.data = typeof this.data === 'object' ? this.data : {};
 
         var _ = this,
             splat = key.split(SPLITTER),
             lastKey = splat.pop(),
-            obj = startObj || _._data;
+            obj = startObj || _.data;
 
         for (var i = 0; i < splat.length; i++) {
             if (typeof obj[splat[i]] !== 'object') {
@@ -68,7 +68,7 @@ Store.definePrototype({
 
         delete obj[lastKey];
 
-        obj = _._data;
+        obj = _.data;
 
         for (i = 0; i < splat.length; i++) {
             if (typeof obj[splat[i]] === 'object' && !Object.keys(obj[splat[i]]).length) {
@@ -88,7 +88,7 @@ Store.definePrototype({
         var _ = this,
             splat = key.split(SPLITTER),
             lastKey = splat.pop(),
-            obj = startObj || _._data;
+            obj = startObj || _.data;
 
         for (var i = 0; i < splat.length; i++) {
             obj = obj[splat[i]];
