@@ -105,9 +105,9 @@ Store.definePrototype({
         if (arr instanceof Array) {
             arr.push(value);
             _.set(key, arr, startObj);
-        // } else if (typeof arr === 'object' && typeof arr !== 'undefined') {
-        //     var nextKey = Object.keys(arr).length - 1;
-        //     _.set(key + '.' + nextKey, value, startObj);
+        } else if (typeof arr === 'object' && typeof arr !== 'undefined') {
+            var nextKey = Object.keys(arr).length;
+            _.set(key + '.' + nextKey, value, startObj);
         } else {
             _.set(key, [value], startObj);
         }
