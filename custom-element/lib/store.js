@@ -37,7 +37,7 @@ Store.definePrototype({
             obj = obj[splat[i]];
         }
 
-        if (IS_INTEGER.test(lastKey) && typeof obj[parseInt(lastKey)] !== 'undefined') {
+        if (IS_INTEGER.test(lastKey) && obj instanceof Array) {
             obj[parseInt(lastKey)] = value;
         } else {
             obj[lastKey] = value;
@@ -68,7 +68,7 @@ Store.definePrototype({
 
         delete obj[lastKey];
 
-        obj = _.data;
+        obj = startObj || _.data;
 
         for (i = 0; i < splat.length; i++) {
             if (typeof obj[splat[i]] === 'object' && !Object.keys(obj[splat[i]]).length) {
@@ -105,6 +105,9 @@ Store.definePrototype({
         if (arr instanceof Array) {
             arr.push(value);
             _.set(key, arr, startObj);
+        // } else if (typeof arr === 'object' && typeof arr !== 'undefined') {
+        //     var nextKey = Object.keys(arr).length - 1;
+        //     _.set(key + '.' + nextKey, value, startObj);
         } else {
             _.set(key, [value], startObj);
         }
